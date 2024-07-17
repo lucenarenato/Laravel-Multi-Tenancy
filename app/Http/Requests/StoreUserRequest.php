@@ -35,6 +35,9 @@ class StoreUserRequest extends FormRequest
             'email' => [
                 'required', 'email', 'unique:users',
             ],
+            'password' => [
+                'required', 'string', 'min:8', 'confirmed',
+            ],
             'role_id' => [
                 'integer', 'in:' . Role::pluck('id')->implode(','),
             ],

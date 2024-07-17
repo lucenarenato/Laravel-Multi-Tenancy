@@ -29,8 +29,8 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             $query = User::query()
-                        ->select(sprintf('%s.*', (new User)->getTable()))
-                        ->where('tenant_id', auth()->id());
+                ->select(sprintf('%s.*', (new User)->getTable()))
+                ->where('tenant_id', auth()->id());
             $table = DataTables::of($query);
 
             $table->addColumn('actions', '&nbsp;');
@@ -85,9 +85,11 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $user = User::create($request->only([
-            'name', 'email',
-        ]));
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
 
         $user->roles()->attach($request->input('role_id'));
 

@@ -1,0 +1,81 @@
+---
+version: '3'
+
+services:
+
+  db:
+    image: "mariadb:${MARIADB_VERSION}"
+    network_mode: none
+    volumes:
+      - db:/var/lib/mysql
+      - ./mariadb:/etc/mysql/conf.d
+      - dbsocket:/run/mysqld
+    env_file:
+      - .env
+
+  memcached:
+    image: memcached:alpine
+    network_mode: none
+    volumes:
+      - memcachedsocket:/tmp
+    command: -s /tmp/memcached.sock -a 777
+
+  nginx:
+        image: nginx:alpine
+        container_name: nginx
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "100m"
+                max-file: "10"
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www/html
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./nginx/ssl/:/etc/nginx/ssl/
+            - fpmsocket:/run/php
+        networks:
+            - sail
+        depends_on:
+          - app
+
+  app:
+    env_file:
+      - .env
+    build:
+        context: .
+        dockerfile: Dockerfile
+        args:
+          WWWGROUP: '${WWWGROUP}'
+    container_name: app
+    environment:
+          APP_ENV: local
+          PHP_IDE_CONFIG: "serverName=dev-test"
+          WWWUSER: '${WWWUSER}'
+          LARAVEL_SAIL: 1
+          XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+          XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    volumes:
+        - ./:/var/www/html
+        - fpmsocket:/run/php
+        - dbsocket:/run/mysqld
+        - memcachedsocket:/run/memcached
+    network_mode: none
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    depends_on:
+        - db
+        - memcached
+
+volumes:
+  app:
+  db:
+  dbsocket:
+  fpmsocket:
+  memcachedsocket:
+
+networks:
+  sail:
