@@ -117,6 +117,25 @@ services:
            UPLOAD_LIMIT: 64M
         networks:
             - sail
+
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        container_name: 'mailhog-${APP_NAME}'
+        logging:
+            driver: 'none'  # disable saving logs
+        environment:
+            MH_AUTH_FILE: /mailhog.auth
+            MH_MAILDIR_PATH: /data
+            MH_STORAGE: maildir
+        volumes:
+            - ./mailhog.auth:/mailhog.auth:ro
+            - ./data:/data:rw
+        ports:
+            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge
