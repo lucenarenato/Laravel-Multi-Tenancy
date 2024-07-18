@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,11 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['domain' => '{user:domain}.'.config('app.short_url'), 'as' => 'tenant.'], function () {
+Route::group(['domain' => '{user:domain}.' . config('app.short_url'), 'as' => 'tenant.'], function () {
     Route::get('/', 'TenantController@show')->name('show');
 });
 
 Route::redirect('/', '/home');
+
+Route::get('/clear-fix', function () {
+    $this->middleware('auth');
+    $exitCode = Artisan::call('key:generate');
+    $exitCode = $exitCode == 0 ? Artisan::call('config:clear') : $exitCode;
+    $exitCode = $exitCode == 0 ? Artisan::call('config:cache') : $exitCode;
+    return $exitCode;
+});
 
 Auth::routes();
 

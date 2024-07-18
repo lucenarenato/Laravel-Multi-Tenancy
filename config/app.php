@@ -54,7 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'short_url' => preg_replace('#^https?://#', '', rtrim(env('APP_URL', 'http://localhost'),'/')),
+    'short_url' => preg_replace('#^https?://#', '', rtrim(env('APP_URL', 'http://localhost'), '/')),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Sao_Paulo',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'pt_BR',
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +121,9 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    //'key' => env('APP_KEY'),
+    'key' => env('APP_KEY', 'base64:DsKLsJtrRPeJvg1WRhg0vteJI8+GQRsVAC0TtxDwGh8='),
+    // 'key' => env('APP_KEY', $_ENV['APP_KEY']),
 
     'cipher' => 'AES-256-CBC',
 
