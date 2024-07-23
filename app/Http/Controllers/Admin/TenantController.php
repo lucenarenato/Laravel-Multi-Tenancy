@@ -88,7 +88,7 @@ class TenantController extends Controller
         $user->roles()->attach(2);
 
         $url = URL::signedRoute('invitation', $user);
-
+        \Log::debug($url);
         $user->notify(new TenantInvitation($url));
 
         return redirect()->route('admin.tenants.index')->withMessage('Tenant has been created successfully');

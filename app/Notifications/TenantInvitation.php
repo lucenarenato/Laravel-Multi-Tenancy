@@ -42,9 +42,11 @@ class TenantInvitation extends Notification
      */
     public function toMail($notifiable)
     {
+        \Log::debug($notifiable);
+        \Log::debug($this->url);
         return (new MailMessage)
-                    ->line('You have been invited as a tenant!')
-                    ->action('Accept Invitation', $this->url)
-                    ->line('Thank you for using our application!');
+            ->line('You have been invited as a tenant!')
+            ->action('Accept Invitation', $this->url)
+            ->line('Thank you for using our application!');
     }
 }
