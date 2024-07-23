@@ -18,5 +18,8 @@ class DatabaseSeeder extends Seeder
              UsersTableSeeder::class,
              RoleUserTableSeeder::class,
          ]);
+
+         $this->call(EstadoSeeder::class);
+         $this->call(CidadeSeeder::class);
     }
 }

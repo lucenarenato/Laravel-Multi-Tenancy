@@ -18,3 +18,7 @@ php artisan cache:clear
 ```
 
 `$schedule->command('queue:work --timeout=590')->everyFiveMinutes()->withoutOverlapping();`
+
+## Fontes
+
+- https://github.com/nfephp-org/sped-nfe/tree/master
