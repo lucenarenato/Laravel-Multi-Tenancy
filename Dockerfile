@@ -7,6 +7,7 @@ ARG APP_STAGE
 ENV APP_STAGE $APP_STAGE
 ARG APP_ENV
 ENV APP_ENV $APP_ENV
+ENV TZ=America/Sao_Paulo
 
 RUN apk add --no-cache $PHPIZE_DEPS \
     zlib-dev \
@@ -30,6 +31,8 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 # \
 # && pecl install xdebug \
 # && docker-php-ext-enable xdebug
+
+RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
 RUN pecl install -f apcu \
     && echo 'extension=apcu.so' > /usr/local/etc/php/conf.d/30_apcu.ini

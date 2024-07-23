@@ -8,9 +8,13 @@
 </p>
 
 ## About Laravel
+
+```sh
+cp .env.example .env
 php artisan key:generate --show
-php artisan optimize:clear && php artisan migrate
+php artisan optimize:clear && php artisan migrate --seed
 php artisan config:cache
 php artisan cache:clear
+```
 
-$schedule->command('queue:work --timeout=590')->everyFiveMinutes()->withoutOverlapping();
+`$schedule->command('queue:work --timeout=590')->everyFiveMinutes()->withoutOverlapping();`
