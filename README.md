@@ -10,5 +10,7 @@
 ## About Laravel
 php artisan key:generate --show
 php artisan optimize:clear && php artisan migrate
+php artisan config:cache
+php artisan cache:clear
 
 $schedule->command('queue:work --timeout=590')->everyFiveMinutes()->withoutOverlapping();

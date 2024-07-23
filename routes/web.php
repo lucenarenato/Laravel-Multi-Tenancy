@@ -29,6 +29,10 @@ Route::get('/clear-fix', function () {
     return $exitCode;
 });
 
+route::fallback(function() {
+    echo 'A rota acessada nao existe. <a href="'.route('home').'">cliqui aqui</a> para ir para pagina inicial';
+ });
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -65,4 +69,8 @@ Route::group(['as' => 'admin.', 'namespace' => 'Admin', 'prefix' => 'admin', 'mi
     Route::get('profile', 'ProfileController@edit')->name('profile.edit');
 
     Route::put('profile', 'ProfileController@update')->name('profile.update');
+
+    Route::get('/emitir', function () {
+        return view('emitir/index');
+    });
 });

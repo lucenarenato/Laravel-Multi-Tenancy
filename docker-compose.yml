@@ -17,6 +17,7 @@ services:
             APP_ENV: local
             PHP_IDE_CONFIG: "serverName=dev-test"
             WWWUSER: '${WWWUSER}'
+            COMPOSER_ALLOW_SUPERUSER: 1
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
@@ -27,7 +28,7 @@ services:
                 max-size: "100m"
                 max-file: "10"
         volumes:
-            - ./:/var/www/html:delegated
+            - ./:/var/www/html:rw
             - ./nginx/custom.ini:/usr/local/etc/php/conf.d/custom.ini
         networks:
             - sail
