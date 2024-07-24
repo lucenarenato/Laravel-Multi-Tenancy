@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+//namespace Database\Seeders;
 
 use App\Models\Cidade;
 use Illuminate\Database\Seeder;
@@ -19,7 +19,7 @@ class CidadeSeeder extends Seeder
         $cidade = app(Cidade::class);
         $chaves = $this->chaves();
 
-        foreach($this->dados() as $linha) {
+        foreach ($this->dados() as $linha) {
             $dados = array_combine($chaves, $linha);
             $campos[] = Arr::only($dados, $cidade->getFillable());
         }

@@ -9,7 +9,10 @@ use Illuminate\Http\Response;
 
 class PedidoController extends Controller
 {
-    public function __construct(private PedidoSync $pedidoSync) {}
+    public function __construct(PedidoSync $pedidoSync)
+    {
+        $this->pedidoSync = $pedidoSync;
+    }
 
     /**
      * Display a listing of the resource.

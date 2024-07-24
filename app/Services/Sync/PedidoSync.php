@@ -23,11 +23,13 @@ use Throwable;
 class PedidoSync
 {
     public function __construct(
-        private ClienteSync $clienteSync,
-        private PedidoItemSync $pedidoItemSync,
-        private EnderecosSync $enderecosSync,
-        private SituacaoSync $situacaoSync
-    ) {}
+        ClienteSync $clienteSync,
+        PedidoItemSync $pedidoItemSync,
+        EnderecosSync $enderecosSync,
+        SituacaoSync $situacaoSync
+    ) {
+        $this->situacaoSync = $situacaoSync;
+    }
 
     /**
      * @param Carbon $since
@@ -65,7 +67,7 @@ class PedidoSync
             $cliente = $this->clienteSync->run($pedidoApi->cliente);
             $situacao = Situacao::apiImport((array) $pedidoApi->situacao);
 
-            $pedido = $this->pedidoSync($pedidoApi,$cliente, $situacao);
+            $pedido = $this->pedidoSync($pedidoApi, $cliente, $situacao);
             $this->entregaSync($pedido, $cliente, $pedidoApi->endereco_entrega);
             $this->pagamentosSync($pedido, $pedidoApi->pagamentos);
 
@@ -96,7 +98,7 @@ class PedidoSync
             return Pedido::updateOrCreate([
                 'pessoa_id' => $cliente->id,
                 'cliente_obs' => $pedidoApi->cliente_obs,
-                'cupom_desconto' => $pedidoApi?->cupom_desconto?->codigo,
+                'cupom_desconto' => $pedidoApi->cupom_desconto->codigo,
                 'peso_real' => $pedidoApi->peso_real,
                 'valor_desconto' => $pedidoApi->valor_desconto,
                 'valor_envio' => $pedidoApi->valor_envio,
@@ -127,7 +129,7 @@ class PedidoSync
         object $enderecoApi
     ): PedidoEntrega {
         try {
-            $endereco = $this->enderecosSync->run([$enderecoApi],$cliente->id)?->first();
+            $endereco = $this->enderecosSync->run([$enderecoApi], $cliente->id)->first();
 
             return PedidoEntrega::firstOrCreate([
                 'pedido_id' => $pedido->id,
@@ -159,8 +161,8 @@ class PedidoSync
                     'forma_id' => $formaDePagamento->id,
                     'pedido_id' => $pedido->id,
                     'tipo' => $pagamentoApi->pagamento_tipo,
-                    'numero_de_parcelas' => $pagamentoApi->parcelamento?->numero_parcelas ?? null,
-                    'valor_das_parcelas' => $pagamentoApi->parcelamento?->valor_parcela ?? null,
+                    'numero_de_parcelas' => $pagamentoApi->parcelamento->numero_parcelas ?? null,
+                    'valor_das_parcelas' => $pagamentoApi->parcelamento->valor_parcela ?? null,
                 ]);
                 $pagamentos[] = PedidoPagamento::apiImport($pagamento->toArray());
             }

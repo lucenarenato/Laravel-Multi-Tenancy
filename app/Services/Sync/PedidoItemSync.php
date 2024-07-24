@@ -22,9 +22,10 @@ use Throwable;
 class PedidoItemSync
 {
     public function __construct(
-        private MarcaSync $marcaSync,
-        private VariacaoSync $variacaoSync
-    ) {}
+        MarcaSync $marcaSync,
+        VariacaoSync $variacaoSync
+    ) {
+    }
 
     /**
      * @param object $item
@@ -38,8 +39,8 @@ class PedidoItemSync
             $item = $this->fillFromApi($item);
 
             $item->pedido_id = $pedidoId;
-            $item->marca_id = $this->marcaSync->run($item->marca ?? '')?->id;
-            $item->produto_id = Produto::apiImport((array) $item)?->id;
+            $item->marca_id = $this->marcaSync->run($item->marca ?? '')->id;
+            $item->produto_id = Produto::apiImport((array) $item)->id;
 
             $this->syncProdutoPreco($item);
             $this->syncPedidoItem($item);
@@ -120,5 +121,4 @@ class PedidoItemSync
             );
         }
     }
-
 }

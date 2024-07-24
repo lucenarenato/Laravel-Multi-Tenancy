@@ -25,7 +25,9 @@ use Throwable;
 
 class ClienteSync
 {
-    public function __construct(private EnderecosSync $enderecosSync) {}
+    public function __construct(EnderecosSync $enderecosSync)
+    {
+    }
 
     /**
      * @param object $cliente
@@ -35,7 +37,7 @@ class ClienteSync
     public function run(object $cliente): ?Cliente
     {
         try {
-            if(!$clienteId = $cliente->id ?? false) {
+            if (!$clienteId = $cliente->id ?? false) {
                 throw new ClienteNotFoundException("Cliente não encontrado");
             }
 
