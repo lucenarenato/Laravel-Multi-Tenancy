@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PedidoController;
+//use App\Http\Controllers\PedidoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +30,9 @@ Route::get('/clear-fix', function () {
     return $exitCode;
 });
 
-route::fallback(function() {
-    echo 'A rota acessada nao existe. <a href="'.route('home').'">cliqui aqui</a> para ir para pagina inicial';
- });
+route::fallback(function () {
+    echo 'A rota acessada nao existe. <a href="' . route('home') . '">cliqui aqui</a> para ir para pagina inicial';
+});
 
 Auth::routes();
 
@@ -74,5 +74,5 @@ Route::group(['as' => 'admin.', 'namespace' => 'Admin', 'prefix' => 'admin', 'mi
     Route::get('/emitir', function () {
         return view('emitir/index');
     });
-    Route::get('pedidos', [PedidoController::class, 'index']);
+    //Route::get('pedidos', [PedidoController::class, 'index']);
 });
