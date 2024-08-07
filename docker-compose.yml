@@ -17,6 +17,7 @@ services:
             APP_ENV: local
             PHP_IDE_CONFIG: "serverName=dev-test"
             WWWUSER: '${WWWUSER}'
+            COMPOSER_ALLOW_SUPERUSER: 1
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
@@ -27,7 +28,7 @@ services:
                 max-size: "100m"
                 max-file: "10"
         volumes:
-            - ./:/var/www/html:delegated
+            - ./:/var/www/html:rw
             - ./nginx/custom.ini:/usr/local/etc/php/conf.d/custom.ini
         networks:
             - sail
@@ -59,62 +60,62 @@ services:
             - mysql
 
     mysql:
-      image: "mariadb:${MARIADB_VERSION}"
-      container_name: mysql
-      tty: true
-      ports:
-          - '${FORWARD_DB_PORT:-3306}:3306'
-      environment:
-          MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-          MYSQL_ROOT_HOST: "%"
-          MYSQL_DATABASE: '${DB_DATABASE}'
-          MYSQL_USER: '${DB_USERNAME}'
-          MYSQL_PASSWORD: '${DB_PASSWORD}'
-          MYSQL_ALLOW_EMPTY_PASSWORD: 1
-          SERVICE_TAGS: dev
-          SERVICE_NAME: mysql
-          TZ: "America/Sao_Paulo"
-      networks:
+        image: "mariadb:${MARIADB_VERSION}"
+        container_name: mysql
+        tty: true
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+            TZ: "America/Sao_Paulo"
+        networks:
             - sail
-      volumes:
-        - 'sail-mariadb:/var/lib/mysql'
-        - './create-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-      healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+        volumes:
+            - 'sail-mariadb:/var/lib/mysql'
+            - './create-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
             retries: 3
             timeout: 5s
-      # env_file:
-      #   - .env
+        # env_file:
+        #   - .env
 
-    # db:
-    #     image: 'mysql:8.0'
-    #     ports:
-    #         - '${FORWARD_DB_PORT:-3306}:3306'
-    #     environment:
-    #         MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-    #         MYSQL_ROOT_HOST: "%"
-    #         MYSQL_DATABASE: '${DB_DATABASE}'
-    #         MYSQL_USER: '${DB_USERNAME}'
-    #         MYSQL_PASSWORD: '${DB_PASSWORD}'
-    #         MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    #     volumes:
-    #         - 'sailmysql:/var/lib/mysql'
-    #         - './create-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-    #     networks:
-    #         - sail
-    #     healthcheck:
-    #         test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
-    #         retries: 3
-    #         timeout: 5s
+        # db:
+        #     image: 'mysql:8.0'
+        #     ports:
+        #         - '${FORWARD_DB_PORT:-3306}:3306'
+        #     environment:
+        #         MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        #         MYSQL_ROOT_HOST: "%"
+        #         MYSQL_DATABASE: '${DB_DATABASE}'
+        #         MYSQL_USER: '${DB_USERNAME}'
+        #         MYSQL_PASSWORD: '${DB_PASSWORD}'
+        #         MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        #     volumes:
+        #         - 'sailmysql:/var/lib/mysql'
+        #         - './create-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        #     networks:
+        #         - sail
+        #     healthcheck:
+        #         test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+        #         retries: 3
+        #         timeout: 5s
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         ports:
             - 8082:80
         environment:
-           PMA_HOSTS: mysql
-           PMA_PASSWORD: "${DB_PASSWORD}"
-           UPLOAD_LIMIT: 64M
+            PMA_HOSTS: mysql
+            PMA_PASSWORD: "${DB_PASSWORD}"
+            UPLOAD_LIMIT: 64M
         networks:
             - sail
 
@@ -122,7 +123,7 @@ services:
         image: 'mailhog/mailhog:latest'
         container_name: 'mailhog-${APP_NAME}'
         logging:
-            driver: 'none'  # disable saving logs
+            driver: 'none' # disable saving logs
         environment:
             MH_AUTH_FILE: /mailhog.auth
             MH_MAILDIR_PATH: /data

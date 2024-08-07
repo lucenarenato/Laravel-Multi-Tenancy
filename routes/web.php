@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+//use App\Http\Controllers\PedidoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,10 @@ Route::get('/clear-fix', function () {
     $exitCode = $exitCode == 0 ? Artisan::call('config:clear') : $exitCode;
     $exitCode = $exitCode == 0 ? Artisan::call('config:cache') : $exitCode;
     return $exitCode;
+});
+
+route::fallback(function () {
+    echo 'A rota acessada nao existe. <a href="' . route('home') . '">cliqui aqui</a> para ir para pagina inicial';
 });
 
 Auth::routes();
@@ -65,4 +70,9 @@ Route::group(['as' => 'admin.', 'namespace' => 'Admin', 'prefix' => 'admin', 'mi
     Route::get('profile', 'ProfileController@edit')->name('profile.edit');
 
     Route::put('profile', 'ProfileController@update')->name('profile.update');
+
+    Route::get('/emitir', function () {
+        return view('emitir/index');
+    });
+    //Route::get('pedidos', [PedidoController::class, 'index']);
 });

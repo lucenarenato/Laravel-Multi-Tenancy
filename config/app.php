@@ -121,8 +121,8 @@ return [
     |
     */
 
-    //'key' => env('APP_KEY'),
-    'key' => env('APP_KEY', 'base64:DsKLsJtrRPeJvg1WRhg0vteJI8+GQRsVAC0TtxDwGh8='),
+    'key' => env('APP_KEY'),
+    //'key' => env('APP_KEY', 'base64:DsKLsJtrRPeJvg1WRhg0vteJI8+GQRsVAC0TtxDwGh8='),
     // 'key' => env('APP_KEY', $_ENV['APP_KEY']),
 
     'cipher' => 'AES-256-CBC',
